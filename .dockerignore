@@ -1,0 +1,44 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+aiappenv/
+aienv/
+venv/
+ENV/
+
+# VS Code
+.vscode/
+
+# Secrets (CRITICAL: Do not include .env in the image if using cloud secrets)
+.env
+
+# Streamlit
+.streamlit/secrets.toml
+
+# NOTE: We DO NOT ignore 'data/' or 'chroma_db/' here because 
+# the goal of the Docker image is to bundle the data securely inside it.

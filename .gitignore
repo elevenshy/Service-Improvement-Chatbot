@@ -1,0 +1,35 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+aiappenv/
+aienv/
+myappenv/
+.venv/
+.env
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# VS Code 
+.vscode/ 
+# PyCharm 
+.idea/
+
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Data & Database (Exclude from Public Repos)
+#data/
+#chroma_db/
+#*.sqlite3
+#*.xlsx
+archive/

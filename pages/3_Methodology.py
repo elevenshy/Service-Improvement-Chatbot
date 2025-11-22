@@ -94,9 +94,9 @@ with col_p1:
 
     **How it works:**
     1.  **Local Masking**: Before embedding or querying, sensitive values are replaced with generic tokens.
-        *   *Service 123* $\rightarrow$ `<<SVC_1>>`
-        *   *Operator XYZ* $\rightarrow$ `<<PTO_1>>`
-        *   *2025-01-01* $\rightarrow$ `<<DATE_1>>`
+        *   *Service 123* → `<<SVC_1>>`
+        *   *Operator XYZ* → `<<PTO_1>>`
+        *   *2025-01-01* → `<<DATE_1>>`
     2.  **Selective Transparency**: While "Who" (Service) and "When" (Date) are masked, the "What" (Metrics like "Added 2 buses") remains unmasked. This allows the AI to reason about the *nature* of the change (e.g., "Capacity increase") without knowing *which* service it applies to.
     3.  **Blind AI Processing**: The AI model processes these tokens. It understands the *structure* ("`<<SVC_1>>` had 2 buses added") but not the *identity*.
     4.  **Local Detokenization**: When the AI response returns, the system locally swaps the tokens back to their original values before displaying the answer to you.

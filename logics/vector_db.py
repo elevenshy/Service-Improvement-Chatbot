@@ -229,12 +229,13 @@ def add_improvements_to_db(df, vector_store):
             if 'Svc No' in row and pd.notna(row['Svc No']):
                 row['Svc No'] = str(row['Svc No']).strip().upper()
             
-            if 'PTO' in row and pd.notna(row['PTO']):
-                pto = str(row['PTO']).lower()
-                if 'sbs' in pto: row['PTO'] = 'SBS Transit'
-                elif 'smrt' in pto: row['PTO'] = 'SMRT Buses'
-                elif 'tower' in pto: row['PTO'] = 'Tower Transit'
-                elif 'go' in pto and 'ahead' in pto: row['PTO'] = 'Go-Ahead Singapore'
+            # PTO Normalization removed to preserve acronyms (SBST, SMRT, etc.)
+            # if 'PTO' in row and pd.notna(row['PTO']):
+            #     pto = str(row['PTO']).lower()
+            #     if 'sbs' in pto: row['PTO'] = 'SBS Transit'
+            #     elif 'smrt' in pto: row['PTO'] = 'SMRT Buses'
+            #     elif 'tower' in pto: row['PTO'] = 'Tower Transit'
+            #     elif 'go' in pto and 'ahead' in pto: row['PTO'] = 'Go-Ahead Singapore'
 
             doc_text = create_semantic_document(row)
             

@@ -246,14 +246,27 @@ def analyze_query_requirements(user_message):
             else:
                 filters["Svc No"] = str(val).upper().strip()
 
+        # PTO Handling: Support both Acronyms and Full Names by expanding to all known aliases
         if "PTO" in filters:
             val = filters["PTO"]
-            if isinstance(val, str):
-                pto_lower = val.lower()
-                if "sbs" in pto_lower: filters["PTO"] = "SBS Transit"
-                elif "smrt" in pto_lower: filters["PTO"] = "SMRT Buses"
-                elif "tower" in pto_lower: filters["PTO"] = "Tower Transit"
-                elif "go" in pto_lower and "ahead" in pto_lower: filters["PTO"] = "Go-Ahead Singapore"
+            aliases = set()
+            
+            def get_pto_aliases(v):
+                v_lower = str(v).lower().strip()
+                if "sbs" in v_lower: return ["SBS Transit", "SBST", "SBS"]
+                if "smrt" in v_lower: return ["SMRT Buses", "SMRT"]
+                if "tower" in v_lower or "tts" in v_lower: return ["Tower Transit", "TTS"]
+                if ("go" in v_lower and "ahead" in v_lower) or "gas" in v_lower: return ["Go-Ahead Singapore", "GAS", "Go-Ahead"]
+                return [v] # Return original if no match
+
+            if isinstance(val, list):
+                for item in val:
+                    aliases.update(get_pto_aliases(item))
+            else:
+                aliases.update(get_pto_aliases(val))
+            
+            filters["PTO"] = list(aliases)
+
         
         if "Improvement / Degrade" in filters:
             val = str(filters["Improvement / Degrade"]).lower()

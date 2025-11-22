@@ -67,6 +67,18 @@ def build_context_prompt(history: list[dict], current_prompt: str) -> str:
 st.title("Bus Service Variation Chatbot")
 st.caption("Submit a question, see results, and keep prior answers in the history panel.")
 
+# IMPORTANT NOTICE: proof-of-concept disclaimer
+with st.expander("IMPORTANT NOTICE: Prototype Disclaimer", expanded=False):
+    st.markdown(
+        """
+        **IMPORTANT NOTICE:** This web application is developed as a proof-of-concept prototype. The information provided here is **NOT** intended for actual usage and should not be relied upon for making any decisions, especially those related to financial, legal, or healthcare matters.
+
+        Furthermore, please be aware that the LLM may generate inaccurate or incorrect information. You assume full responsibility for how you use any generated output.
+
+        Always consult with qualified professionals for accurate and personalized advice.
+        """
+    )
+
 # Use a form to prevent double-click issues and enable "Enter to submit"
 with st.form(key="query_form"):
     user_prompt = st.text_area("Enter your question", height=100, placeholder="e.g. Show improvements for service 154 in 2024")

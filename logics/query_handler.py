@@ -181,7 +181,7 @@ def analyze_query_requirements(user_message):
     
     Task 1: Extract Filters (JSON)
     - **Svc No**: e.g., "123", "45A"
-    - **PTO**: e.g., "SBST", "SMRT", "TTS", "GAS"
+    - **PTO**: e.g., "SBST", "SMRT", "TTS", "GAS", "Tower Transit Singapore", "Go-Ahead Singapore", "SBS Transit"
     - **Improvement / Degrade**: Extract one of these EXACT values if relevant:
       "Adjustment", "Degradation", "Improvement", "New Route", "No change", "Non-AI Improvement", "Offpeak Improvement", "Route amendment", "Route extension", "Withdrawn".
     - **Type of Improvement / Degrade**: Extract one of these EXACT values if relevant: "Additional bus stops", "Additional trips", "Adjust Trip Timing", "Adjustment", "Advance first trip", "Bring forward 1st bus", "BSS change", "Change trip block", "Cut operating hours", "Degradation", "Degrade headways", "Extend last bus timing", "Extend operating hours", "Extend SWT/HWT route", "Improvement", "Maintain service level", "New Route", "No change", "PTO change", "Remove bus stops", "Route Amendment", "Route extension", "Route Truncation", "Shift bus stop", "Shift operating base", "Swap hi-cap buses", "Withdrawn".

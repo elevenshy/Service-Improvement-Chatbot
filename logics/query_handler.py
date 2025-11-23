@@ -189,8 +189,8 @@ def analyze_query_requirements(user_message):
     - **Day Type**: Extract relevant day types. Preferred terms: "Weekday", "Weekend", "Daily", "Public Holiday", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun". 
       **IMPORTANT**: Do NOT convert specific days (e.g. "Sat") to categories (e.g. "Weekend"). If user says "Saturday", output "Sat".
     - **Ops Relay or BCEP**: Extract "Ops Relay" or "BCEP" if mentioned.
-    - **improvement (swap dd bus)**: Set to "Y" if user asks about double decker swaps.
-    - **improvement (addtional trip during peak)**: Set to "Y" if user asks about peak hour trips.
+    - **improvement (swap dd bus)**: Set to "Y" ONLY if user explicitly asks about double decker swaps. Set to "N" ONLY if user explicitly asks to exclude them. Otherwise leave empty.
+    - **improvement (addtional trip during peak)**: Set to "Y" ONLY if user explicitly asks about peak hour trips. Set to "N" ONLY if user explicitly asks to exclude them. Otherwise leave empty.
     - **Date Range**: If user mentions specific dates, months, or QUARTERS (e.g. "since Jan 2024", "in 2023", "Q1 2024").
       - Convert Quarters to dates (e.g. Q1 2024 -> 2024-01-01 to 2024-03-31).
       - Format: "start_date": "YYYY-MM-DD", "end_date": "YYYY-MM-DD"
@@ -308,11 +308,11 @@ def analyze_query_requirements(user_message):
         if date_filter:
             filters["Implementation Date"] = date_filter
         
-        return filters, intent
+        return intent, filters
         
     except Exception as e:
         print(f"Router Error: {e}")
-        return {}, "BROAD"
+        return "BROAD", {}
 
 def process_user_message(user_message, vector_store): 
     """
@@ -326,7 +326,17 @@ def process_user_message(user_message, vector_store):
     
     # Step 2: Analyze Query (Routing + Filtering)
     with st.spinner("Routing query..."):
-        key_filters, search_intent = analyze_query_requirements(user_message)
+        search_intent, key_filters = analyze_query_requirements(user_message)
+        
+        # SAFEGUARD: Remove 'N' filters for boolean fields unless explicitly requested
+        # This prevents the LLM from accidentally excluding data when the user asks general questions
+        boolean_fields = ['improvement (swap dd bus)', 'improvement (addtional trip during peak)']
+        if key_filters:
+            for field in boolean_fields:
+                if key_filters.get(field) == 'N':
+                    # Only keep 'N' if user explicitly used negative language
+                    if not any(neg in user_message.lower() for neg in ["no ", "not ", "without ", "exclude ", "except "]):
+                        del key_filters[field]
     
     # Display Routing Info
     if key_filters:

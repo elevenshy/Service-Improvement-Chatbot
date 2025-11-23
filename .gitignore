@@ -5,7 +5,7 @@ __pycache__/
 
 # Virtual environments
 venv/
-py313/
+py313env/
 env/
 ENV/
 aiappenv/

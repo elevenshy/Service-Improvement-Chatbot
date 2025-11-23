@@ -1,28 +1,36 @@
-# Use an official Python runtime as a parent image
-FROM python:3.12-slim
+# Use the official lightweight Python image.
 
-# Set the working directory in the container
-WORKDIR /app
+# https://hub.docker.com/_/python
+# This lien pecifies the base image for the Docker container
+# It uses the official Python image from Docker Hub, 
+# specifically the version 3.12 with the "slim" variant
+# which is a smaller, more lightweight version of the full Python image.
+FROM python:3.13-slim
 
-# Install system dependencies (if needed for building packages)
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+# This ensures that Python output is not buffered, 
+# which is useful for real-time logging and debugging.
+ENV PYTHONUNBUFFERED True
+# This line is needed for the app to work in CStack 
+RUN groupadd --gid 1001 app && useradd --uid 1001 --gid 1001 -ms /bin/bash app
 
-# Copy the requirements file into the container
-COPY requirements_v2.txt .
+#  Sets the working directory for the container to `/home/app`. All subsequent commands will be run from this directory.
+WORKDIR /home/app
+# Copies the `requirements.txt` file from the local machine to the current working directory in the container (`/home/app`).
+COPY requirements.txt ./
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements_v2.txt
+RUN pip install -r requirements.txt
+# This line is needed for the app to work in CStack 
+USER 1001
 
-# Copy the current directory contents into the container at /app
-COPY . .
+# Copy local code to the container image.
+#  Copies all files from the local directory to the current working directory in the container (`/home/app`), and changes the ownership of the copied files
+COPY --chown=app:app . ./
 
-# Expose the port Streamlit runs on
+# (Optional) Add any additional commands here
+
+# Run the web service on container startup.
+# Informs Docker that the container will listen on port 8501 at runtime. 
+# This is used for documentation purposes and does not actually publish the port.
 EXPOSE 8501
-
-# Healthcheck to ensure the app is running
-HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health || exit 1
-
-# Run Chatbot.py when the container launches
-CMD ["streamlit", "run", "Chatbot.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# Specifies the command to run when the container starts. In this case, it runs a Streamlit application using the `main.py` script.
+CMD streamlit run main.py

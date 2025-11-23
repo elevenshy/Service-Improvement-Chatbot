@@ -30,7 +30,8 @@ aiappenv/
 aienv/
 venv/
 ENV/
-
+py313/
+archive/
 # VS Code
 .vscode/
 
